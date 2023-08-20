@@ -26,7 +26,7 @@ export default function ChangePassword() {
           return 'Password is required'
         }
         if (value.length < 8) {
-          return 'Password must be more than 8 characters'
+          return 'Password must be atleast 8 characters'
         }
       },
       passwordConfirmation: (value, values) => {

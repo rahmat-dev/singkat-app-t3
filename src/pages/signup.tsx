@@ -4,13 +4,18 @@ import {
   Center,
   Container,
   Divider,
+  PasswordInput,
   Stack,
   Text,
   TextInput,
   useMantineTheme,
 } from '@mantine/core'
 import { useForm } from '@mantine/form'
+import { notifications } from '@mantine/notifications'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
+
+import { api } from '~/utils/api'
 
 interface FormValues {
   name: string
@@ -19,6 +24,7 @@ interface FormValues {
 }
 
 export default function SignUp() {
+  const router = useRouter()
   const theme = useMantineTheme()
   const signUpForm = useForm<FormValues>({
     initialValues: {
@@ -44,12 +50,31 @@ export default function SignUp() {
         if (!value) {
           return 'Password is required'
         }
+        if (value.length < 8) {
+          return 'Password must be atleast 8 characters'
+        }
       },
     },
   })
+  const { mutate, isLoading } = api.auth.signUp.useMutation()
 
   const handleSignUp = (values: FormValues) => {
-    console.log(values)
+    mutate(values, {
+      onSuccess: () => {
+        notifications.show({
+          title: 'Sign Up',
+          message: 'Yeay.. registration successful',
+        })
+        void router.push('/signin')
+      },
+      onError: error => {
+        notifications.show({
+          title: 'Sign Up',
+          message: error.message,
+          color: 'red',
+        })
+      },
+    })
   }
 
   return (
@@ -57,7 +82,7 @@ export default function SignUp() {
       <Center h="100vh">
         <Card w="100%" maw={360} shadow="sm" padding="xl">
           <Stack spacing={4} mb="xl">
-            <Text fz="xl" weight={500}>
+            <Text fz="xl" weight={600}>
               Sign Up
             </Text>
             <Divider w={48} size="sm" color="dark" />
@@ -74,12 +99,14 @@ export default function SignUp() {
                 label="Email"
                 {...signUpForm.getInputProps('email')}
               />
-              <TextInput
+              <PasswordInput
                 withAsterisk
                 label="Password"
                 {...signUpForm.getInputProps('password')}
               />
-              <Button type="submit">Sign Up</Button>
+              <Button type="submit" loading={isLoading}>
+                Sign Up
+              </Button>
             </Stack>
           </form>
           <Text size="sm" mt="sm" align="center">
@@ -89,7 +116,7 @@ export default function SignUp() {
               component={Link}
               href="/signin"
               color={theme.primaryColor}
-              weight={500}
+              weight={600}
             >
               Sign In
             </Text>

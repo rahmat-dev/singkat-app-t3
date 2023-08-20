@@ -50,7 +50,7 @@ export default function SignIn() {
       <Center h="100vh">
         <Card w="100%" maw={360} shadow="sm" padding="xl">
           <Stack spacing={4} mb="xl">
-            <Text fz="xl" weight={500}>
+            <Text fz="xl" weight={600}>
               Sign In
             </Text>
             <Divider w={48} size="sm" color="dark" />
@@ -77,7 +77,7 @@ export default function SignIn() {
               component={Link}
               href="/signup"
               color={theme.primaryColor}
-              weight={500}
+              weight={600}
             >
               Sign Up
             </Text>
