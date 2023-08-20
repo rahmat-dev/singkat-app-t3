@@ -8,8 +8,10 @@ import {
   Text,
   Menu,
   rem,
+  Stack,
 } from '@mantine/core'
 import { IconLock, IconLogout } from '@tabler/icons-react'
+import Link from 'next/link'
 
 const useStyles = createStyles(theme => ({
   header: {
@@ -48,7 +50,7 @@ export default function Navbar() {
     <div className={classes.header}>
       <Container size="sm" className={classes.mainSection}>
         <Group position="apart">
-          <Text fz="xl" fw="bold" color="teal">
+          <Text href="/" component={Link} fz="xl" fw="bold" color="teal">
             SINGKAT
           </Text>
 
@@ -67,17 +69,26 @@ export default function Navbar() {
                 })}
               >
                 <Group spacing={7}>
-                  <Avatar radius="xl" size={28} color="teal">
+                  <Stack align="flex-end" spacing={4}>
+                    <Text size="xs" weight={500} sx={{ lineHeight: 1 }} mr={3}>
+                      John Doe
+                    </Text>
+                    <Text color="gray" size="xs" sx={{ lineHeight: 1 }} mr={3}>
+                      johndoe@gmail.com
+                    </Text>
+                  </Stack>
+                  <Avatar radius="xl" size={32} color="teal">
                     JD
                   </Avatar>
-                  <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
-                    John Doe
-                  </Text>
                 </Group>
               </UnstyledButton>
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Item icon={<IconLock size="1rem" />}>
+              <Menu.Item
+                href="/change-password"
+                component={Link}
+                icon={<IconLock size="1rem" />}
+              >
                 Change Password
               </Menu.Item>
               <Menu.Item icon={<IconLogout size="1rem" />}>Logout</Menu.Item>

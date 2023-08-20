@@ -10,7 +10,10 @@ import Head from 'next/head'
 import { api } from '~/utils/api'
 import '~/styles/globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+})
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
