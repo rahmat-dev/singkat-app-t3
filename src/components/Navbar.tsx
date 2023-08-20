@@ -12,6 +12,9 @@ import {
 } from '@mantine/core'
 import { IconLock, IconLogout } from '@tabler/icons-react'
 import Link from 'next/link'
+import { signOut, useSession } from 'next-auth/react'
+
+import { convertAvatarName } from '~/utils/format'
 
 const useStyles = createStyles(theme => ({
   header: {
@@ -46,6 +49,7 @@ const useStyles = createStyles(theme => ({
 export default function Navbar() {
   const { classes, cx } = useStyles()
   const [userMenuOpened, setUserMenuOpened] = useState(false)
+  const { data } = useSession()
 
   return (
     <div className={classes.header}>
@@ -72,14 +76,14 @@ export default function Navbar() {
                 <Group spacing={7}>
                   <Stack align="flex-end" spacing={4}>
                     <Text size="xs" weight={500} sx={{ lineHeight: 1 }} mr={3}>
-                      John Doe
+                      {data?.user?.name}
                     </Text>
                     <Text color="gray" size="xs" sx={{ lineHeight: 1 }} mr={3}>
-                      johndoe@gmail.com
+                      {data?.user?.email}
                     </Text>
                   </Stack>
-                  <Avatar radius="xl" size={32} color="teal">
-                    JD
+                  <Avatar tt="uppercase" radius="xl" size={32} color="teal">
+                    {convertAvatarName(data?.user?.name)}
                   </Avatar>
                 </Group>
               </UnstyledButton>
@@ -92,7 +96,12 @@ export default function Navbar() {
               >
                 Change Password
               </Menu.Item>
-              <Menu.Item icon={<IconLogout size="1rem" />}>Logout</Menu.Item>
+              <Menu.Item
+                onClick={() => signOut()}
+                icon={<IconLogout size="1rem" />}
+              >
+                Logout
+              </Menu.Item>
             </Menu.Dropdown>
           </Menu>
         </Group>
