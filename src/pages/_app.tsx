@@ -1,4 +1,6 @@
 import { MantineProvider } from '@mantine/core'
+import { ModalsProvider } from '@mantine/modals'
+import { Notifications } from '@mantine/notifications'
 import { type Session } from 'next-auth'
 import { SessionProvider } from 'next-auth/react'
 import { type AppType } from 'next/app'
@@ -33,9 +35,12 @@ const MyApp: AppType<{ session: Session | null }> = ({
           fontFamily: inter.style.fontFamily,
         }}
       >
-        <SessionProvider session={session}>
-          <Component {...pageProps} />
-        </SessionProvider>
+        <Notifications position="top-right" />
+        <ModalsProvider>
+          <SessionProvider session={session}>
+            <Component {...pageProps} />
+          </SessionProvider>
+        </ModalsProvider>
       </MantineProvider>
     </>
   )
