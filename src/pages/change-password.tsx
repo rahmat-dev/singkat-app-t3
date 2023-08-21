@@ -1,10 +1,10 @@
 import { Button, PasswordInput, Stack } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { notifications } from '@mantine/notifications'
-import { IconCheck } from '@tabler/icons-react'
-import { useState } from 'react'
+import { IconCheck, IconX } from '@tabler/icons-react'
 
 import Layout from '~/components/Layout'
+import { api } from '~/utils/api'
 
 interface FormValues {
   password: string
@@ -12,7 +12,7 @@ interface FormValues {
 }
 
 export default function ChangePassword() {
-  const [isLoading, setIsLoading] = useState(false)
+  const { mutate, isLoading } = api.auth.changePassword.useMutation()
 
   const changePasswordForm = useForm<FormValues>({
     initialValues: {
@@ -41,16 +41,23 @@ export default function ChangePassword() {
   })
 
   const handleUpdatePassword = (values: FormValues) => {
-    console.log(values)
-    setIsLoading(true)
-    setTimeout(() => {
-      notifications.show({
-        title: 'Update Link',
-        message: 'Your link has been successfully deleted',
-        icon: <IconCheck size="1rem" />,
-      })
-      setIsLoading(false)
-    }, 500)
+    mutate(values, {
+      onSuccess: () => {
+        notifications.show({
+          title: 'Change Password',
+          message: 'Password has been successfully updated',
+          icon: <IconCheck size="1rem" />,
+        })
+        changePasswordForm.reset()
+      },
+      onError: error => {
+        notifications.show({
+          title: 'Change Password',
+          message: error.message,
+          icon: <IconX size="1rem" />,
+        })
+      },
+    })
   }
 
   return (

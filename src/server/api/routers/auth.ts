@@ -27,4 +27,36 @@ export const authRouter = createTRPCRouter({
       })
       return newUser
     }),
+  changePassword: publicProcedure
+    .input(
+      z
+        .object({
+          password: z.string().nonempty().min(8),
+          passwordConfirmation: z.string().nonempty(),
+        })
+        .refine(
+          ({ password, passwordConfirmation }) =>
+            password === passwordConfirmation,
+          {
+            message: "Password confirmation doesn't match",
+            path: ['passwordConfirmation'],
+          },
+        ),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session?.user.id
+      const user = await ctx.prisma.user.findUnique({
+        where: { id: userId },
+      })
+      if (!user) {
+        throw new TRPCClientError('User not found')
+      }
+
+      const salt = await genSalt()
+      const hashedPassword = await hash(input.password, salt)
+      await ctx.prisma.user.update({
+        data: { password: hashedPassword },
+        where: { id: userId },
+      })
+    }),
 })
