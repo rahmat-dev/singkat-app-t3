@@ -12,6 +12,7 @@ import {
 import { useForm } from '@mantine/form'
 import { notifications } from '@mantine/notifications'
 import type { GetServerSideProps, GetServerSidePropsContext } from 'next'
+import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
@@ -97,49 +98,54 @@ export default function SignUp() {
   }
 
   return (
-    <Center h="100vh" bg="gray.1" p="md">
-      <Card w="100%" maw={360} shadow="sm" padding="xl">
-        <Stack spacing={4} mb="xl">
-          <Text fz="xl" weight={600}>
-            Sign Up
-          </Text>
-          <Divider w={48} size="sm" color="dark" />
-        </Stack>
-        <form onSubmit={signUpForm.onSubmit(handleSignUp)}>
-          <Stack>
-            <TextInput
-              withAsterisk
-              label="Name"
-              {...signUpForm.getInputProps('name')}
-            />
-            <TextInput
-              withAsterisk
-              label="Email"
-              {...signUpForm.getInputProps('email')}
-            />
-            <PasswordInput
-              withAsterisk
-              label="Password"
-              {...signUpForm.getInputProps('password')}
-            />
-            <Button type="submit" loading={isLoading}>
+    <>
+      <Head>
+        <title>Singkat | Sign Up</title>
+      </Head>
+      <Center h="100vh" bg="gray.1" p="md">
+        <Card w="100%" maw={360} shadow="sm" padding="xl">
+          <Stack spacing={4} mb="xl">
+            <Text fz="xl" weight={600}>
               Sign Up
-            </Button>
+            </Text>
+            <Divider w={48} size="sm" color="dark" />
           </Stack>
-        </form>
-        <Text size="sm" mt="sm" align="center">
-          Already have an account?&nbsp;
-          <Text
-            size="sm"
-            component={Link}
-            href="/signin"
-            color={theme.primaryColor}
-            weight={600}
-          >
-            Sign In
+          <form onSubmit={signUpForm.onSubmit(handleSignUp)}>
+            <Stack>
+              <TextInput
+                withAsterisk
+                label="Name"
+                {...signUpForm.getInputProps('name')}
+              />
+              <TextInput
+                withAsterisk
+                label="Email"
+                {...signUpForm.getInputProps('email')}
+              />
+              <PasswordInput
+                withAsterisk
+                label="Password"
+                {...signUpForm.getInputProps('password')}
+              />
+              <Button type="submit" loading={isLoading}>
+                Sign Up
+              </Button>
+            </Stack>
+          </form>
+          <Text size="sm" mt="sm" align="center">
+            Already have an account?&nbsp;
+            <Text
+              size="sm"
+              component={Link}
+              href="/signin"
+              color={theme.primaryColor}
+              weight={600}
+            >
+              Sign In
+            </Text>
           </Text>
-        </Text>
-      </Card>
-    </Center>
+        </Card>
+      </Center>
+    </>
   )
 }

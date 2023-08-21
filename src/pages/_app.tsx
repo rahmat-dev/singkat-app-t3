@@ -22,7 +22,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <>
       <Head>
-        <title>Page title</title>
+        <title>Singkat</title>
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"

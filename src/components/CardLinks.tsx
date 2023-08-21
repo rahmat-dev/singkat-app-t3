@@ -42,7 +42,9 @@ function CardLink({ link, handleEdit, handleDelete }: CardLinkProps) {
           >
             {`${appUrl
               ?.replace('http://', '')
-              ?.replace('https://', '')}/${shortUrl}`}
+              ?.replace('https://', '')
+              ?.replace('http://www.', '')
+              ?.replace('https://www.', '')}/${shortUrl}`}
           </Anchor>
           <CopyButton value={`${appUrl}/${shortUrl}`} timeout={2000}>
             {({ copied, copy }) => (

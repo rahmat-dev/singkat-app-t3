@@ -2,6 +2,7 @@ import { Button, PasswordInput, Stack } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { notifications } from '@mantine/notifications'
 import { IconCheck, IconX } from '@tabler/icons-react'
+import Head from 'next/head'
 
 import Layout from '~/components/Layout'
 import { api } from '~/utils/api'
@@ -62,6 +63,9 @@ export default function ChangePassword() {
 
   return (
     <Layout>
+      <Head>
+        <title>Singkat | Change Password</title>
+      </Head>
       <form onSubmit={changePasswordForm.onSubmit(handleUpdatePassword)}>
         <Stack mt={80}>
           <PasswordInput
