@@ -1,30 +1,42 @@
 import { Button, Flex, Stack, Text } from '@mantine/core'
 import { modals } from '@mantine/modals'
 import { notifications } from '@mantine/notifications'
-import { IconCheck } from '@tabler/icons-react'
-import { useState } from 'react'
+
+import { api } from '~/utils/api'
 
 interface ModalDeleteLinkProps {
   id: number
 }
 
 export default function ModalDeleteLink({ id }: ModalDeleteLinkProps) {
-  const [isLoading, setIsLoading] = useState(false)
+  const { mutate, isLoading } = api.link.delete.useMutation()
+  const utils = api.useContext()
 
   const handleCancel = () => {
     modals.closeAll()
   }
 
   const handleDelete = () => {
-    setIsLoading(true)
-    setTimeout(() => {
-      modals.closeAll()
-      notifications.show({
-        title: 'Delete Link',
-        message: 'Your link has been successfully deleted',
-        icon: <IconCheck size="1rem" />,
-      })
-    }, 500)
+    mutate(
+      { id },
+      {
+        onSuccess: () => {
+          handleCancel()
+          notifications.show({
+            title: 'Delete Link',
+            message: 'Your link has been successfully deleted',
+          })
+          utils.link.getAll.invalidate()
+        },
+        onError: error => {
+          notifications.show({
+            title: 'Delete Link',
+            message: error.message,
+            color: 'red',
+          })
+        },
+      },
+    )
   }
 
   return (

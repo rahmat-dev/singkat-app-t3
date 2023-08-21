@@ -4,7 +4,7 @@ import { modals } from '@mantine/modals'
 import { notifications } from '@mantine/notifications'
 import { type Link } from '@prisma/client'
 import { IconCheck, IconX } from '@tabler/icons-react'
-import { useState } from 'react'
+import { api } from '~/utils/api'
 
 interface ModalEditLink {
   link: Link
@@ -15,7 +15,8 @@ interface FormValues {
 }
 
 export default function ModalEditLink({ link }: ModalEditLink) {
-  const [isLoading, setIsLoading] = useState(false)
+  const { mutate, isLoading } = api.link.update.useMutation()
+  const utils = api.useContext()
 
   const editFrom = useForm<FormValues>({
     initialValues: {
@@ -27,30 +28,36 @@ export default function ModalEditLink({ link }: ModalEditLink) {
         if (!value) {
           return 'Short url is required'
         }
+        if (!/^[a-zA-Z0-9_\-]+$/.test(value)) {
+          return 'Short url only letter, number, - or _'
+        }
       },
     },
   })
 
   const handleEdit = (values: FormValues) => {
-    setIsLoading(true)
-    setTimeout(() => {
-      if (values.shortUrl === 'success') {
-        modals.closeAll()
-        notifications.show({
-          title: 'Update Link',
-          message: 'Your link has been successfully deleted',
-          icon: <IconCheck size="1rem" />,
-        })
-      } else {
-        setIsLoading(false)
-        notifications.show({
-          title: 'Update Link',
-          message: 'Update failed, short url is already in use',
-          icon: <IconX size="1rem" />,
-          color: 'red',
-        })
-      }
-    }, 500)
+    mutate(
+      { id: link.id, shortUrl: values.shortUrl },
+      {
+        onSuccess: () => {
+          modals.closeAll()
+          notifications.show({
+            title: 'Update Link',
+            message: 'Your link has been successfully deleted',
+            icon: <IconCheck size="1rem" />,
+          })
+          utils.link.getAll.invalidate()
+        },
+        onError: error => {
+          notifications.show({
+            title: 'Update Link',
+            message: error.message,
+            icon: <IconX size="1rem" />,
+            color: 'red',
+          })
+        },
+      },
+    )
   }
 
   return (
@@ -62,7 +69,11 @@ export default function ModalEditLink({ link }: ModalEditLink) {
           {...editFrom.getInputProps('shortUrl')}
         />
         <TextInput disabled label="Original Url" value={link.originalUrl} />
-        <Button type="submit" loading={isLoading}>
+        <Button
+          type="submit"
+          loading={isLoading}
+          disabled={link.shortUrl === editFrom.values.shortUrl}
+        >
           Update
         </Button>
       </Stack>

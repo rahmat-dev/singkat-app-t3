@@ -8,6 +8,7 @@ import {
   ActionIcon,
   CopyButton,
   Tooltip,
+  Skeleton,
 } from '@mantine/core'
 import { modals } from '@mantine/modals'
 import { type Link } from '@prisma/client'
@@ -113,7 +114,36 @@ function CardLink({ link, handleEdit, handleDelete }: CardLinkProps) {
   )
 }
 
-export default function CardLinks({ links }: { links: Link[] }) {
+function CardLinkSkeletonItem() {
+  return (
+    <Card shadow="sm" padding="xl">
+      <Stack spacing={4}>
+        <Skeleton height={28} w="30%" />
+        <Skeleton height={20} w="50%" />
+      </Stack>
+      <Flex mt="md" gap="sm">
+        <Skeleton height={30} width={80} />
+        <Skeleton height={30} width={80} />
+      </Flex>
+    </Card>
+  )
+}
+
+export function CardLinkSkeleton() {
+  return (
+    <Stack mt="xl">
+      <CardLinkSkeletonItem />
+      <CardLinkSkeletonItem />
+      <CardLinkSkeletonItem />
+    </Stack>
+  )
+}
+
+interface CardLinksProps {
+  links: Link[]
+}
+
+export default function CardLinks({ links }: CardLinksProps) {
   const handleEdit = (link: Link) => {
     modals.open({
       title: 'Edit Link',
